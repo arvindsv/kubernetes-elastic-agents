@@ -183,6 +183,7 @@ public class KubernetesAgentInstancesTest {
         //second create agent request
         agentInstances.create(mockCreateAgentRequestContext, mockPluginSettings, mockPluginRequest);
         verify(mockKubernetesInstanceFactory, times(0)).create(any(), any(), any(), any());
+        verify(mockCreateAgentRequestContext).log(contains("The number of pending kubernetes pods is currently at the maximum permissible limit (1)"));
     }
 
     @Test
