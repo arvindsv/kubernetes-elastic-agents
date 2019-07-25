@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 ThoughtWorks, Inc.
+ * Copyright 2019 ThoughtWorks, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -302,8 +302,8 @@ public class KubernetesInstanceFactory {
         HashMap<String, String> context = new HashMap<>();
         context.put(POD_POSTFIX, UUID.randomUUID().toString());
         context.put(CONTAINER_POSTFIX, UUID.randomUUID().toString());
-        context.put(GOCD_AGENT_IMAGE, "gocd/gocd-agent-alpine-3.6");
-        context.put(LATEST_VERSION, "v19.1.0");
+        context.put(GOCD_AGENT_IMAGE, "gocd/gocd-agent-alpine-3.9");
+        context.put(LATEST_VERSION, "v19.6.0");
         return context;
     }
 }

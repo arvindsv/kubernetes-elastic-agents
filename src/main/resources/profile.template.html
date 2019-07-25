@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018 ThoughtWorks, Inc.
+  ~ Copyright 2019 ThoughtWorks, Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@
                     <span class="asterix">*</span>
                 </label>
                 <input ng-class="{'is-invalid-input': GOINPUTNAME[Image].$error.server}" type="text" ng-model="Image"
-                       ng-required="true" placeholder="alpine:latest"/>
+                       ng-required="true" placeholder="gocd/gocd-agent-alpine-3.9:v19.6.0"/>
                 <span class="form_error form-error" ng-class="{'is-visible': GOINPUTNAME[Image].$error.server}"
                       ng-show="GOINPUTNAME[Image].$error.server">{{GOINPUTNAME[Image].$error.server}}</span>
             </div>
