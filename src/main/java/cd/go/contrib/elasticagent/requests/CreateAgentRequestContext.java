@@ -22,6 +22,7 @@ import cd.go.contrib.elasticagent.model.JobIdentifier;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import io.fabric8.kubernetes.api.model.EnvVar;
+import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +48,13 @@ public class CreateAgentRequestContext {
     @SerializedName("cluster_profile_properties")
     private ClusterProfileProperties clusterProfileProperties;
 
+    private ConsoleLogAppender consoleLogAppender = new ConsoleLogAppender() {
+        @Override
+        public void accept(String s) {
+            // Do nothing.
+        }
+    };
+
     public CreateAgentRequestContext() {
     }
 
@@ -61,14 +69,20 @@ public class CreateAgentRequestContext {
         this.jobIdentifier = identifier;
     }
 
-    public CreateAgentRequestContext(String autoRegisterKey, Map<String, String> properties, String environment, JobIdentifier identifier, ClusterProfileProperties clusterProfileProperties) {
-        this(autoRegisterKey, properties, environment, identifier);
-        this.clusterProfileProperties = clusterProfileProperties;
+    public static CreateAgentRequestContext fromJSON(String json, PluginRequest pluginRequest) {
+        CreateAgentRequestContext context = GSON.fromJson(json, CreateAgentRequestContext.class);
+
+        ConsoleLogAppender consoleLogAppender = text -> {
+            final String message = String.format("%s %s\n", LocalTime.now().toString(ConsoleLogAppender.MESSAGE_PREFIX_FORMATTER), text);
+            pluginRequest.appendToConsoleLog(context.jobIdentifier(), message);
+        };
+
+        context.setConsoleLogAppender(consoleLogAppender);
+        return context;
     }
 
-    public static CreateAgentRequestContext fromJSON(String json) {
-        CreateAgentRequestContext createAgentRequestContext = GSON.fromJson(json, CreateAgentRequestContext.class);
-        return createAgentRequestContext;
+    private void setConsoleLogAppender(ConsoleLogAppender consoleLogAppender) {
+        this.consoleLogAppender = consoleLogAppender;
     }
 
     public String autoRegisterKey() {
@@ -117,5 +131,9 @@ public class CreateAgentRequestContext {
                 ", jobIdentifier=" + jobIdentifier +
                 ", clusterProfileProperties=" + clusterProfileProperties +
                 '}';
+    }
+
+    public void log(String message, Object... args) {
+        consoleLogAppender.accept(String.format(message, args));
     }
 }

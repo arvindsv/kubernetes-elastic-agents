@@ -22,36 +22,28 @@ import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import static cd.go.contrib.elasticagent.KubernetesPlugin.LOG;
 import static java.text.MessageFormat.format;
 
 public class CreateAgentRequestExecutor implements RequestExecutor {
-    private static final DateTimeFormatter MESSAGE_PREFIX_FORMATTER = DateTimeFormat.forPattern("'##|'HH:mm:ss.SSS '[go]'");
     private final AgentInstances<KubernetesInstance> agentInstances;
     private final PluginRequest pluginRequest;
-    private final CreateAgentRequestContext request;
+    private final CreateAgentRequestContext context;
 
-    public CreateAgentRequestExecutor(CreateAgentRequestContext request, AgentInstances<KubernetesInstance> agentInstances, PluginRequest pluginRequest) {
-        this.request = request;
+    public CreateAgentRequestExecutor(CreateAgentRequestContext context, AgentInstances<KubernetesInstance> agentInstances, PluginRequest pluginRequest) {
+        this.context = context;
         this.agentInstances = agentInstances;
         this.pluginRequest = pluginRequest;
     }
 
     @Override
     public GoPluginApiResponse execute() throws Exception {
-        LOG.debug(format("[Create Agent] creating elastic agent for profile {0} in cluster {1}", request.properties(), request.clusterProfileProperties()));
+        LOG.debug(format("[Create Agent] creating elastic agent for profile {0} in cluster {1}", context.properties(), context.clusterProfileProperties()));
 
-        ConsoleLogAppender consoleLogAppender = text -> {
-            final String message = String.format("%s %s\n", LocalTime.now().toString(MESSAGE_PREFIX_FORMATTER), text);
-            pluginRequest.appendToConsoleLog(request.jobIdentifier(), message);
-        };
+        context.log("Received request to create an elastic agent pod at %s", new DateTime().toString("yyyy-MM-dd HH:mm:ss ZZ"));
 
-        consoleLogAppender.accept(String.format("Received request to create an elastic agent pod at %s", new DateTime().toString("yyyy-MM-dd HH:mm:ss ZZ")));
-
-        agentInstances.create(request, request.clusterProfileProperties(), pluginRequest);
+        agentInstances.create(context, context.clusterProfileProperties(), pluginRequest);
         return new DefaultGoPluginApiResponse(200);
     }
 

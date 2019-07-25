@@ -58,7 +58,7 @@ public class ClusterProfilePropertiesTest {
                 "  }\n" +
                 "}";
 
-        CreateAgentRequestContext createAgentRequestContext = CreateAgentRequestContext.fromJSON(createAgentRequestJSON);
+        CreateAgentRequestContext createAgentRequestContext = CreateAgentRequestContext.fromJSON(createAgentRequestJSON, null);
 
         String shouldAssignWorkJSON = "{\n" +
                 "  \"environment\": \"prod\",\n" +

@@ -16,7 +16,11 @@
 
 package cd.go.contrib.elasticagent;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.function.Consumer;
 
 public interface ConsoleLogAppender extends Consumer<String> {
+    DateTimeFormatter MESSAGE_PREFIX_FORMATTER = DateTimeFormat.forPattern("'##|'HH:mm:ss.SSS '[go]'");
 }

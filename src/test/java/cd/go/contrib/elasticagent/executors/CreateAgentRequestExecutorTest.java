@@ -16,10 +16,7 @@
 
 package cd.go.contrib.elasticagent.executors;
 
-import cd.go.contrib.elasticagent.AgentInstances;
-import cd.go.contrib.elasticagent.KubernetesAgentInstances;
-import cd.go.contrib.elasticagent.KubernetesInstance;
-import cd.go.contrib.elasticagent.PluginRequest;
+import cd.go.contrib.elasticagent.*;
 import cd.go.contrib.elasticagent.model.JobIdentifier;
 import cd.go.contrib.elasticagent.requests.CreateAgentRequestContext;
 import org.junit.Test;
@@ -31,14 +28,18 @@ import static org.mockito.Mockito.*;
 public class CreateAgentRequestExecutorTest {
     @Test
     public void shouldAskDockerContainersToCreateAnAgent() throws Exception {
-        JobIdentifier jobIdentifier = new JobIdentifier("p1", 1L, "l1", "s1", "1", "j1", 1L);
-        CreateAgentRequestContext request = new CreateAgentRequestContext("autoregkey1", new HashMap<>(), "env1", jobIdentifier);
+        CreateAgentRequestContext context = mock(CreateAgentRequestContext.class);
         AgentInstances<KubernetesInstance> agentInstances = mock(KubernetesAgentInstances.class);
         PluginRequest pluginRequest = mock(PluginRequest.class);
-        new CreateAgentRequestExecutor(request, agentInstances, pluginRequest).execute();
 
-        verify(agentInstances).create(request, request.clusterProfileProperties(), pluginRequest);
-        verify(pluginRequest).appendToConsoleLog(eq(jobIdentifier), contains("Received request to create an elastic agent pod at "));
+        ClusterProfileProperties clusterProfileProperties = new ClusterProfileProperties();
+        when(context.clusterProfileProperties()).thenReturn(clusterProfileProperties);
+        when(context.properties()).thenReturn(new HashMap<>());
+
+        new CreateAgentRequestExecutor(context, agentInstances, pluginRequest).execute();
+
+        verify(context).log(contains("Received request to create an elastic agent pod at %s"), any());
+        verify(agentInstances).create(context, clusterProfileProperties, pluginRequest);
         verifyNoMoreInteractions(pluginRequest);
     }
 }

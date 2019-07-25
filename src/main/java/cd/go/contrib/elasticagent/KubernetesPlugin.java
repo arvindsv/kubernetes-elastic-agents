@@ -30,6 +30,7 @@ import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import org.joda.time.LocalTime;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public class KubernetesPlugin implements GoPlugin {
                 case REQUEST_VALIDATE_CLUSTER_PROFILE_CONFIGURATION:
                     return ClusterProfileValidateRequest.fromJSON(request.requestBody()).executor().execute();
                 case REQUEST_CREATE_AGENT:
-                    CreateAgentRequestContext createAgentRequestContext = CreateAgentRequestContext.fromJSON(request.requestBody());
+                    CreateAgentRequestContext createAgentRequestContext = CreateAgentRequestContext.fromJSON(request.requestBody(), pluginRequest);
                     clusterProfileProperties = createAgentRequestContext.clusterProfileProperties();
                     refreshInstancesForCluster(clusterProfileProperties);
                     return createAgentRequestContext.executor(getAgentInstancesFor(clusterProfileProperties), pluginRequest).execute();

@@ -17,6 +17,7 @@
 package cd.go.contrib.elasticagent.requests;
 
 import cd.go.contrib.elasticagent.ClusterProfileProperties;
+import cd.go.contrib.elasticagent.PluginRequest;
 import cd.go.contrib.elasticagent.model.JobIdentifier;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -27,11 +28,12 @@ import java.util.Map;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class CreateAgentRequestContextTest {
 
     @Test
-    public void shouldDeserializeFromJSON() throws Exception {
+    public void shouldDeserializeFromJSON() {
         String json = "{\n" +
                 "  \"auto_register_key\": \"secret-key\",\n" +
                 "  \"elastic_agent_profile_properties\": {\n" +
@@ -53,9 +55,12 @@ public class CreateAgentRequestContextTest {
                 "  }\n" +
                 "}";
 
-        CreateAgentRequestContext request = CreateAgentRequestContext.fromJSON(json);
+        PluginRequest pluginRequest = mock(PluginRequest.class);
+        CreateAgentRequestContext request = CreateAgentRequestContext.fromJSON(json, pluginRequest);
+
         assertThat(request.autoRegisterKey(), equalTo("secret-key"));
         assertThat(request.environment(), equalTo("prod"));
+
         HashMap<String, String> expectedElasticAgentProperties = new HashMap<>();
         expectedElasticAgentProperties.put("key1", "value1");
         expectedElasticAgentProperties.put("key2", "value2");
