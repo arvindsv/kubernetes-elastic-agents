@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 ThoughtWorks, Inc.
+ * Copyright 2019 ThoughtWorks, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,8 +156,11 @@ public class JobIdentifier {
         return result;
     }
 
+    public String represent() {
+        return String.format("%s/%d/%s/%s/%s", pipelineName, pipelineCounter, stageName, stageCounter, jobName);
+    }
+
     public static JobIdentifier fromJson(String json) {
         return GSON.fromJson(json, JobIdentifier.class);
     }
-
 }
