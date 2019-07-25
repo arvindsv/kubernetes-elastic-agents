@@ -60,14 +60,17 @@ public class KubernetesAgentInstances implements AgentInstances<KubernetesInstan
     public KubernetesInstance create(CreateAgentRequestContext context, PluginSettings settings, PluginRequest pluginRequest) {
         final Integer maxAllowedContainers = settings.getMaxPendingPods();
         synchronized (instances) {
+            context.log("Syncing information about all pods in cluster.");
             refreshAll(settings);
             doWithLockOnSemaphore(new SetupSemaphore(maxAllowedContainers, instances, semaphore));
 
+            context.log("Waiting to create agent pod.");
             if (semaphore.tryAcquire()) {
                 return createKubernetesInstance(context, settings, pluginRequest);
             } else {
-                String message = format("[Create Agent Request] The number of pending kubernetes pods is currently at the maximum permissible limit ({0}). Total kubernetes pods ({1}). Not creating any more containers.", maxAllowedContainers, instances.size());
-                LOG.warn(message);
+                String prefix = "[Create Agent Request]";
+                String message = format("The number of pending kubernetes pods is currently at the maximum permissible limit ({0}). Total kubernetes pods ({1}). Not creating any more containers.", maxAllowedContainers, instances.size());
+                LOG.warn(format("{0} {1}", prefix, message));
                 context.log(message);
                 return null;
             }
@@ -80,16 +83,21 @@ public class KubernetesAgentInstances implements AgentInstances<KubernetesInstan
         }
     }
 
-    private KubernetesInstance createKubernetesInstance(CreateAgentRequestContext request, PluginSettings settings, PluginRequest pluginRequest) {
-        JobIdentifier jobIdentifier = request.jobIdentifier();
+    private KubernetesInstance createKubernetesInstance(CreateAgentRequestContext context, PluginSettings settings, PluginRequest pluginRequest) {
+        JobIdentifier jobIdentifier = context.jobIdentifier();
         if (isAgentCreatedForJob(jobIdentifier.getJobId())) {
-            LOG.warn(format("[Create Agent Request] Request for creating an agent for Job Identifier [{0}] has already been scheduled. Skipping current request.", jobIdentifier));
+            String prefix = "[Create Agent Request]";
+            String message = format("Request for creating an agent for job identifier [{0}] has already been scheduled. Skipping current request.", jobIdentifier);
+            LOG.warn(format("{0} {1}", prefix, message));
+            context.log(message);
             return null;
         }
 
+        context.log("Creating agent pod.");
         KubernetesClient client = factory.client(settings);
-        KubernetesInstance instance = kubernetesInstanceFactory.create(request, settings, client, pluginRequest);
+        KubernetesInstance instance = kubernetesInstanceFactory.create(context, settings, client, pluginRequest);
         register(instance);
+        context.log("Agent pod created. Waiting for it to register to the GoCD server.");
 
         return instance;
     }

@@ -43,7 +43,12 @@ public class CreateAgentRequestExecutor implements RequestExecutor {
 
         context.log("Received request to create an elastic agent pod at %s", new DateTime().toString("yyyy-MM-dd HH:mm:ss ZZ"));
 
-        agentInstances.create(context, context.clusterProfileProperties(), pluginRequest);
+        try {
+            agentInstances.create(context, context.clusterProfileProperties(), pluginRequest);
+        } catch (Exception e) {
+            context.log("Failed to create agent pod: %s", e.getMessage());
+            throw e;
+        }
         return new DefaultGoPluginApiResponse(200);
     }
 

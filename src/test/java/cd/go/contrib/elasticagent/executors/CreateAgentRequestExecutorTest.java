@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class CreateAgentRequestExecutorTest {
@@ -41,5 +42,23 @@ public class CreateAgentRequestExecutorTest {
         verify(context).log(contains("Received request to create an elastic agent pod at %s"), any());
         verify(agentInstances).create(context, clusterProfileProperties, pluginRequest);
         verifyNoMoreInteractions(pluginRequest);
+    }
+
+    @Test
+    public void shouldLogErrorMessageToConsoleIfAgentCreateFails() throws Exception {
+        CreateAgentRequestContext context = mock(CreateAgentRequestContext.class);
+        AgentInstances<KubernetesInstance> agentInstances = mock(KubernetesAgentInstances.class);
+        PluginRequest pluginRequest = mock(PluginRequest.class);
+
+        when(agentInstances.create(any(), any(), any())).thenThrow(new RuntimeException("Ouch!"));
+
+        try {
+            new CreateAgentRequestExecutor(context, agentInstances, pluginRequest).execute();
+            fail("Should have thrown an exception.");
+        } catch (Exception e) {
+            // This is expected. Ignore.
+        }
+
+        verify(context).log(eq("Failed to create agent pod: %s"), eq("Ouch!"));
     }
 }
