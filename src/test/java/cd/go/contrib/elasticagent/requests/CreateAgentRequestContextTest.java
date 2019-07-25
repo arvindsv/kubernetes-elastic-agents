@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class CreateAgentRequestTest {
+public class CreateAgentRequestContextTest {
 
     @Test
     public void shouldDeserializeFromJSON() throws Exception {
@@ -53,7 +53,7 @@ public class CreateAgentRequestTest {
                 "  }\n" +
                 "}";
 
-        CreateAgentRequest request = CreateAgentRequest.fromJSON(json);
+        CreateAgentRequestContext request = CreateAgentRequestContext.fromJSON(json);
         assertThat(request.autoRegisterKey(), equalTo("secret-key"));
         assertThat(request.environment(), equalTo("prod"));
         HashMap<String, String> expectedElasticAgentProperties = new HashMap<>();

@@ -21,7 +21,7 @@ import cd.go.contrib.elasticagent.KubernetesAgentInstances;
 import cd.go.contrib.elasticagent.KubernetesInstance;
 import cd.go.contrib.elasticagent.PluginRequest;
 import cd.go.contrib.elasticagent.model.JobIdentifier;
-import cd.go.contrib.elasticagent.requests.CreateAgentRequest;
+import cd.go.contrib.elasticagent.requests.CreateAgentRequestContext;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class CreateAgentRequestExecutorTest {
     @Test
     public void shouldAskDockerContainersToCreateAnAgent() throws Exception {
         JobIdentifier jobIdentifier = new JobIdentifier("p1", 1L, "l1", "s1", "1", "j1", 1L);
-        CreateAgentRequest request = new CreateAgentRequest("autoregkey1", new HashMap<>(), "env1", jobIdentifier);
+        CreateAgentRequestContext request = new CreateAgentRequestContext("autoregkey1", new HashMap<>(), "env1", jobIdentifier);
         AgentInstances<KubernetesInstance> agentInstances = mock(KubernetesAgentInstances.class);
         PluginRequest pluginRequest = mock(PluginRequest.class);
         new CreateAgentRequestExecutor(request, agentInstances, pluginRequest).execute();

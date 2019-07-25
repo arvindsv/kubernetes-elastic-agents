@@ -30,7 +30,7 @@ import java.util.Map;
 import static cd.go.contrib.elasticagent.utils.Util.GSON;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class CreateAgentRequest {
+public class CreateAgentRequestContext {
     @Expose
     @SerializedName("auto_register_key")
     private String autoRegisterKey;
@@ -47,28 +47,28 @@ public class CreateAgentRequest {
     @SerializedName("cluster_profile_properties")
     private ClusterProfileProperties clusterProfileProperties;
 
-    public CreateAgentRequest() {
+    public CreateAgentRequestContext() {
     }
 
-    private CreateAgentRequest(String autoRegisterKey, Map<String, String> properties, String environment) {
+    private CreateAgentRequestContext(String autoRegisterKey, Map<String, String> properties, String environment) {
         this.autoRegisterKey = autoRegisterKey;
         this.properties = properties;
         this.environment = environment;
     }
 
-    public CreateAgentRequest(String autoRegisterKey, Map<String, String> properties, String environment, JobIdentifier identifier) {
+    public CreateAgentRequestContext(String autoRegisterKey, Map<String, String> properties, String environment, JobIdentifier identifier) {
         this(autoRegisterKey, properties, environment);
         this.jobIdentifier = identifier;
     }
 
-    public CreateAgentRequest(String autoRegisterKey, Map<String, String> properties, String environment, JobIdentifier identifier, ClusterProfileProperties clusterProfileProperties) {
+    public CreateAgentRequestContext(String autoRegisterKey, Map<String, String> properties, String environment, JobIdentifier identifier, ClusterProfileProperties clusterProfileProperties) {
         this(autoRegisterKey, properties, environment, identifier);
         this.clusterProfileProperties = clusterProfileProperties;
     }
 
-    public static CreateAgentRequest fromJSON(String json) {
-        CreateAgentRequest createAgentRequest = GSON.fromJson(json, CreateAgentRequest.class);
-        return createAgentRequest;
+    public static CreateAgentRequestContext fromJSON(String json) {
+        CreateAgentRequestContext createAgentRequestContext = GSON.fromJson(json, CreateAgentRequestContext.class);
+        return createAgentRequestContext;
     }
 
     public String autoRegisterKey() {
@@ -110,7 +110,7 @@ public class CreateAgentRequest {
 
     @Override
     public String toString() {
-        return "CreateAgentRequest{" +
+        return "CreateAgentRequestContext{" +
                 "autoRegisterKey='" + autoRegisterKey + '\'' +
                 ", properties=" + properties +
                 ", environment='" + environment + '\'' +

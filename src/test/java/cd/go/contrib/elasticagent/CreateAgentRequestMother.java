@@ -17,13 +17,13 @@
 package cd.go.contrib.elasticagent;
 
 import cd.go.contrib.elasticagent.model.JobIdentifier;
-import cd.go.contrib.elasticagent.requests.CreateAgentRequest;
+import cd.go.contrib.elasticagent.requests.CreateAgentRequestContext;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class CreateAgentRequestMother {
-    public static CreateAgentRequest defaultCreateAgentRequest() {
+    public static CreateAgentRequestContext defaultCreateAgentRequest() {
         String autoRegisterKey = UUID.randomUUID().toString();
         HashMap<String, String> properties = new HashMap<>();
         properties.put("Image", "gocd/custom-gocd-agent-alpine");
@@ -37,10 +37,10 @@ public class CreateAgentRequestMother {
 
         String environment = "QA";
         JobIdentifier identifier = new JobIdentifier("up_42", 1L, "up_42_label", "up42_stage", "20", "up42_job", 10L);
-        return new CreateAgentRequest(autoRegisterKey, properties, environment, identifier);
+        return new CreateAgentRequestContext(autoRegisterKey, properties, environment, identifier);
     }
 
-    public static CreateAgentRequest createAgentRequestUsingPodYaml() {
+    public static CreateAgentRequestContext createAgentRequestUsingPodYaml() {
         String podYaml = "apiVersion: v1\n" +
                 "kind: Pod\n" +
                 "metadata:\n" +
@@ -68,10 +68,10 @@ public class CreateAgentRequestMother {
 
         String environment = "QA";
         JobIdentifier identifier = new JobIdentifier("up_42", 1L, "up_42_label", "up42_stage", "20", "up42_job", 10L);
-        return new CreateAgentRequest(autoRegisterKey, properties, environment, identifier);
+        return new CreateAgentRequestContext(autoRegisterKey, properties, environment, identifier);
     }
 
-    public static CreateAgentRequest createAgentRequestUsingRemoteFile() {
+    public static CreateAgentRequestContext createAgentRequestUsingRemoteFile() {
         String autoRegisterKey = UUID.randomUUID().toString();
         HashMap<String, String> properties = new HashMap<>();
         properties.put("PodSpecType", "remote");
@@ -80,6 +80,6 @@ public class CreateAgentRequestMother {
 
         String environment = "QA";
         JobIdentifier identifier = new JobIdentifier("up_42", 1L, "up_42_label", "up42_stage", "20", "up42_job", 10L);
-        return new CreateAgentRequest(autoRegisterKey, properties, environment, identifier);
+        return new CreateAgentRequestContext(autoRegisterKey, properties, environment, identifier);
     }
 }

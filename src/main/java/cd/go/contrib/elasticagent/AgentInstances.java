@@ -17,7 +17,7 @@
 package cd.go.contrib.elasticagent;
 
 import cd.go.contrib.elasticagent.executors.ServerPingRequestExecutor;
-import cd.go.contrib.elasticagent.requests.CreateAgentRequest;
+import cd.go.contrib.elasticagent.requests.CreateAgentRequestContext;
 
 
 /**
@@ -35,7 +35,7 @@ public interface AgentInstances<T> {
      * @param settings   the plugin settings object
      * @param pluginRequest the plugin request object
      */
-    T create(CreateAgentRequest request, PluginSettings settings, PluginRequest pluginRequest) throws Exception;
+    T create(CreateAgentRequestContext request, PluginSettings settings, PluginRequest pluginRequest) throws Exception;
 
     /**
      * This message is sent when the plugin needs to terminate the agent instance.

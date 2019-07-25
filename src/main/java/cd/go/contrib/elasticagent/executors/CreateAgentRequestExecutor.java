@@ -17,7 +17,7 @@
 package cd.go.contrib.elasticagent.executors;
 
 import cd.go.contrib.elasticagent.*;
-import cd.go.contrib.elasticagent.requests.CreateAgentRequest;
+import cd.go.contrib.elasticagent.requests.CreateAgentRequestContext;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import org.joda.time.DateTime;
@@ -32,9 +32,9 @@ public class CreateAgentRequestExecutor implements RequestExecutor {
     private static final DateTimeFormatter MESSAGE_PREFIX_FORMATTER = DateTimeFormat.forPattern("'##|'HH:mm:ss.SSS '[go]'");
     private final AgentInstances<KubernetesInstance> agentInstances;
     private final PluginRequest pluginRequest;
-    private final CreateAgentRequest request;
+    private final CreateAgentRequestContext request;
 
-    public CreateAgentRequestExecutor(CreateAgentRequest request, AgentInstances<KubernetesInstance> agentInstances, PluginRequest pluginRequest) {
+    public CreateAgentRequestExecutor(CreateAgentRequestContext request, AgentInstances<KubernetesInstance> agentInstances, PluginRequest pluginRequest) {
         this.request = request;
         this.agentInstances = agentInstances;
         this.pluginRequest = pluginRequest;

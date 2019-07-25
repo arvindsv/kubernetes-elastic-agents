@@ -77,10 +77,10 @@ public class KubernetesPlugin implements GoPlugin {
                 case REQUEST_VALIDATE_CLUSTER_PROFILE_CONFIGURATION:
                     return ClusterProfileValidateRequest.fromJSON(request.requestBody()).executor().execute();
                 case REQUEST_CREATE_AGENT:
-                    CreateAgentRequest createAgentRequest = CreateAgentRequest.fromJSON(request.requestBody());
-                    clusterProfileProperties = createAgentRequest.clusterProfileProperties();
+                    CreateAgentRequestContext createAgentRequestContext = CreateAgentRequestContext.fromJSON(request.requestBody());
+                    clusterProfileProperties = createAgentRequestContext.clusterProfileProperties();
                     refreshInstancesForCluster(clusterProfileProperties);
-                    return createAgentRequest.executor(getAgentInstancesFor(clusterProfileProperties), pluginRequest).execute();
+                    return createAgentRequestContext.executor(getAgentInstancesFor(clusterProfileProperties), pluginRequest).execute();
                 case REQUEST_SHOULD_ASSIGN_WORK:
                     ShouldAssignWorkRequest shouldAssignWorkRequest = ShouldAssignWorkRequest.fromJSON(request.requestBody());
                     clusterProfileProperties = shouldAssignWorkRequest.clusterProfileProperties();

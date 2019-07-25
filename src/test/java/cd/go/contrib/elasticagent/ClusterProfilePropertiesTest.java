@@ -16,7 +16,7 @@
 
 package cd.go.contrib.elasticagent;
 
-import cd.go.contrib.elasticagent.requests.CreateAgentRequest;
+import cd.go.contrib.elasticagent.requests.CreateAgentRequestContext;
 import cd.go.contrib.elasticagent.requests.ShouldAssignWorkRequest;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class ClusterProfilePropertiesTest {
                 "  }\n" +
                 "}";
 
-        CreateAgentRequest createAgentRequest = CreateAgentRequest.fromJSON(createAgentRequestJSON);
+        CreateAgentRequestContext createAgentRequestContext = CreateAgentRequestContext.fromJSON(createAgentRequestJSON);
 
         String shouldAssignWorkJSON = "{\n" +
                 "  \"environment\": \"prod\",\n" +
@@ -87,6 +87,6 @@ public class ClusterProfilePropertiesTest {
                 "}";
 
         ShouldAssignWorkRequest shouldAssignWorkRequest = ShouldAssignWorkRequest.fromJSON(shouldAssignWorkJSON);
-        assertThat(createAgentRequest.clusterProfileProperties().uuid(), is(shouldAssignWorkRequest.clusterProfileProperties().uuid()));
+        assertThat(createAgentRequestContext.clusterProfileProperties().uuid(), is(shouldAssignWorkRequest.clusterProfileProperties().uuid()));
     }
 }
